@@ -5,6 +5,7 @@ public class QuickFindUF {
 
 
     public QuickFindUF(int N) {
+        //O(N)
         setOf = new int[N];
         for (int i = 0; i < N; i++) {
             setOf[i] = i;
@@ -12,6 +13,7 @@ public class QuickFindUF {
     }
 
     public void union(int p, int q) {
+        //O(N)
         int set1 = setOf[p];
         int set2 = setOf[q];
         for (int i = 0; i < setOf.length; i++) {
@@ -22,10 +24,12 @@ public class QuickFindUF {
     }
 
     public boolean connected(int p, int q) {
+        //O(1)
         return setOf[p] == setOf[q];
     }
 
     public static void main(String[] args) {
+        //O(N^2)
         Scanner scanner = new Scanner(System.in);
 
 
