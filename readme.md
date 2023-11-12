@@ -6,3 +6,7 @@ well as my first formal data structures and algorithms course. So I want to keep
 good notes for both those reasons. This repository is those notes.
 
 The textbook is Algorithms by the same instructors.
+
+# Topics
+
+[Union Find](./week-1/UnionFind.md)
