@@ -1,28 +1,28 @@
 import java.util.Scanner;
 
 public class QuickFindUF {
-    private int[] id;
+    private int[] setOf;
 
 
     public QuickFindUF(int N) {
-        id = new int[N];
+        setOf = new int[N];
         for (int i = 0; i < N; i++) {
-            id[i] = i;
+            setOf[i] = i;
         }
     }
 
     public void union(int p, int q) {
-        int set1 = id[p];
-        int set2 = id[q];
-        for (int i = 0; i < id.length; i++) {
-            if (id[i] == set2) {
-                id[i] = set1;
+        int set1 = setOf[p];
+        int set2 = setOf[q];
+        for (int i = 0; i < setOf.length; i++) {
+            if (setOf[i] == set2) {
+                setOf[i] = set1;
             }
         }
     }
 
     public boolean connected(int p, int q) {
-        return id[p] == id[q];
+        return setOf[p] == setOf[q];
     }
 
     public static void main(String[] args) {
