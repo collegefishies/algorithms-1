@@ -1,0 +1,8 @@
+10
+union 4 3
+union 3 8
+union 6 5
+union 9 4
+union 2 1
+connected 0 7
+connected 8 9
