@@ -5,6 +5,7 @@ public class QuickUnionUF {
 
 
     public QuickUnionUF(int N) {
+        //O(N)
         parentOf = new int[N];
         for (int i = 0; i < N; i++) {
             parentOf[i] = i;
@@ -12,12 +13,15 @@ public class QuickUnionUF {
     }
 
     public void union(int p, int q) {
+        //Worst case: O(N)
         int root1 = rootOf(p);
         int root2 = rootOf(q);
         parentOf[root2] = root1;
     }
 
     public int rootOf(int p) {
+        //Worst Case: O(N)
+        //Best Case: O(1)
         while (parentOf[p] != p) {
             p = parentOf[p];
         }
@@ -25,10 +29,12 @@ public class QuickUnionUF {
     }
 
     public boolean connected(int p, int q) {
+        //Worst Case: O(N)
         return rootOf(p) == rootOf(q);
     }
 
     public static void main(String[] args) {
+        //Worst Case: O(N^2)
         Scanner scanner = new Scanner(System.in);
 
 
