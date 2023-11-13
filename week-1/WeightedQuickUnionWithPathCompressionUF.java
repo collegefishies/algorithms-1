@@ -60,7 +60,7 @@ public class WeightedQuickUnionWithPathCompressionUF {
             return;
         }
         int N = scanner.nextInt();
-        WeightedQuickUnionUF qf = new WeightedQuickUnionWithPathCompressionUF(N);
+        WeightedQuickUnionWithPathCompressionUF qf = new WeightedQuickUnionWithPathCompressionUF(N);
 
 
         System.out.println("Enter union/find commands:");
