@@ -54,3 +54,93 @@ require walking through the entire id array updating the id's of all sets everyt
 a new connection is formed.
 
 
+# Assignment
+# Percolation Specification FAQ
+
+## Project Overview
+Write a program to estimate the percolation threshold via Monte Carlo simulation.
+
+### Installation
+- **Java Programming Environment (Optional):**
+  - Install the custom IntelliJ programming environment:
+    - Step-by-step instructions for:
+      - [Mac OS X](#)
+      - [Windows](#)
+      - [Linux](#)
+  - After installation, `javac-algs4` and `java-algs4` commands will classpath in `algs4.jar`.
+  - Required import statements for accessing classes in `algs4.jar`:
+    ```java
+    import edu.princeton.cs.algs4.StdRandom;
+    import edu.princeton.cs.algs4.StdStats;
+    import edu.princeton.cs.algs4.WeightedQuickUnionUF;
+    ```
+
+### Percolation Problem
+- **Modeling:**
+  - Use an n-by-n grid of sites, either open or blocked.
+  - A system percolates if there is a full site in the bottom row connected to the top row.
+
+### Task
+- Write a program to estimate the percolation threshold `p*`.
+
+### Percolation Data Type
+- **API for `Percolation` class:**
+  ```java
+  public class Percolation {
+      public Percolation(int n) // Constructor
+      public void open(int row, int col)
+      public boolean isOpen(int row, int col)
+      public boolean isFull(int row, int col)
+      public int numberOfOpenSites()
+      public boolean percolates()
+      public static void main(String[] args) // Optional
+  }
+  ```
+- **Corner Cases:**
+    - Throw `IllegalArgumentException` for invalid arguments.
+- **Performance Requirements:**
+    - Constructor: Time proportional to n².
+    - Methods: Constant time plus constant number of `union()` and `find()` calls.
+
+### Monte Carlo Simulation
+- **Process:**
+    1. Initialize all sites as blocked.
+    2. Randomly open sites until the system percolates.
+    3. The fraction of open sites at percolation estimates the threshold.
+
+### PercolationStats Data Type
+- **API for `PercolationStats` class:**
+  ```java
+  public class PercolationStats {
+      public PercolationStats(int n, int trials)
+      public double mean()
+      public double stddev()
+      public double confidenceLo()
+      public double confidenceHi()
+      public static void main(String[] args)
+  }
+  ```
+    - **Exceptions:**
+        - Throw `IllegalArgumentException` if `n ≤ 0` or `trials ≤ 0`.
+
+### Examples
+- Command-line execution examples:
+  ```
+  ~/Desktop/percolation> java-algs4 PercolationStats 200 100
+  mean                    = 0.5929934999999997
+  stddev                  = 0.00876990421552567
+  95% confidence interval = [0.5912745987737567, 0.5947124012262428]
+  ```
+
+### Optional Analysis
+- **Running Time and Memory Usage:**
+    - Implement using QuickFindUF and WeightedQuickUnionUF.
+    - Measure running time for various values of n and T.
+    - Estimate memory usage using a 64-bit memory-cost model.
+
+### Submission
+- Submit a .zip file containing `Percolation.java` and `PercolationStats.java`.
+
+## Additional Information
+- Developed by Bob Sedgewick and Kevin Wayne.
+- Copyright © 2008.
