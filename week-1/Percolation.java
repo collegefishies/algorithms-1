@@ -4,7 +4,8 @@ public class Percolation {
     private int sideLength;
     private int numberOfOpenSites;
     private boolean[][] openSites;
-    private WeightedQuickUnionUF unionFind;
+    private WeightedQuickUnionUF percolatesUnionFind;
+    private WeightedQuickUnionUF noBackwashUnionFind;
 
     public Percolation(int n) {
         // O(n^2)
@@ -15,14 +16,23 @@ public class Percolation {
         numberOfOpenSites = 0;
         openSites = new boolean[n][n];
 
-        unionFind = new WeightedQuickUnionUF(n * n + 2);
+        percolatesUnionFind = new WeightedQuickUnionUF(n * n + 2);
+        noBackwashUnionFind = new WeightedQuickUnionUF(n * n + 2);
+
         // connect all virtual sites with top row.
         for (int i = 1; i <= n; i++) {
-            unionFind.union(0, enumerate(1, i));
+            union(0, enumerate(1, i));
         }
-//        for (int i = 1; i <= n; i++) {
-//            unionFind.union(n * n + 1, enumerate(n, i));
-//        }
+
+        // connect all virtual sites with bottom row.
+        for (int i = 1; i <= n; i++) {
+            percolatesUnionFind.union(n * n + 1, enumerate(n, i));
+        }
+    }
+
+    private void union(int p, int q) {
+        percolatesUnionFind.union(p, q);
+        noBackwashUnionFind.union(p, q);
     }
 
     public static void main(String[] args) {
@@ -46,7 +56,7 @@ public class Percolation {
         }
 
         if (isOpen(row1, col1) && isOpen(row2, col2)) {
-            unionFind.union(enumerate(row1, col1), enumerate(row2, col2));
+            union(enumerate(row1, col1), enumerate(row2, col2));
         }
     }
 
@@ -95,7 +105,7 @@ public class Percolation {
 
     public boolean isFull(int row, int col) {
         // O(1)
-        boolean isConnectedToTop = unionFind.find(0) == unionFind.find(enumerate(row, col));
+        boolean isConnectedToTop = noBackwashUnionFind.find(0) == noBackwashUnionFind.find(enumerate(row, col));
         return isConnectedToTop && isOpen(row, col);
     }
 
@@ -105,15 +115,7 @@ public class Percolation {
     }
 
     public boolean percolates() {
-        // must be O(1)
-        // the grader wants no backwash so that forces this to be O(sqrt(N));
-        int start = unionFind.find(0);
-        for (int i = 1; i <= sideLength; i++) {
-            if (start == unionFind.find(enumerate(sideLength, i)))
-            {
-                return true;
-            }
-        }
-        return false;
+        // O(1)
+        return percolatesUnionFind.find(0) == percolatesUnionFind.find(sideLength * sideLength + 1);
     }
 }

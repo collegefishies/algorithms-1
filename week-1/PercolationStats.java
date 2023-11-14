@@ -14,6 +14,7 @@ public class PercolationStats {
 
         for (int trial = 0; trial < trials; trial++) {
             percolation = new Percolation(n);
+
             while (!percolation.percolates()) {
                 //select random site
                 int row = StdRandom.uniformInt(n) + 1;
@@ -59,9 +60,9 @@ public class PercolationStats {
 
         int n = Integer.parseInt(args[0]);
         int trials = Integer.parseInt(args[1]);
-        new PercolationStats(n, trials);
+        PercolationStats p = new PercolationStats(n, trials);
 
-        printStats();
+        p.printStats();
     }
 }
 
