@@ -31,7 +31,7 @@ public class Percolation {
         return col + (row - 1) * sideLength;
     }
 
-    private void connectNeighbor(int row1, int col1, int row2, int col2) {
+    private void connectOpenNeighbor(int row1, int col1, int row2, int col2) {
         if (row1 < 1 || row1 > sideLength || col1 < 1 || col1 > sideLength) {
             throw new IllegalArgumentException("All indices must be from 1 to " + sideLength);
         }
@@ -39,10 +39,12 @@ public class Percolation {
             throw new IllegalArgumentException("All indices must be from 1 to " + sideLength);
         }
 
-        UnionFind.union(enumerate(row1, col1), enumerate(row2, col2));
+        if ( isOpen(row1, col1) && isOpen(row2, col2) ) {
+            UnionFind.union(enumerate(row1, col1), enumerate(row2, col2));
+        }
     }
 
-    private void connectAllNeighbors(int row, int col) {
+    private void connectAllOpenNeighbors(int row, int col) {
         int[][] directions = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}}; // Directions: up, down, left, right
 
         for (int[] dir : directions) {
@@ -50,7 +52,7 @@ public class Percolation {
             int newCol = col + dir[1];
 
             try {
-                connectNeighbor(row, col, newRow, newCol);
+                connectOpenNeighbor(row, col, newRow, newCol);
             } catch (IllegalArgumentException e) {
             }
         }
@@ -67,7 +69,7 @@ public class Percolation {
         numberOfOpenSites += 1;
 
         //connect neighbors
-        connectAllNeighbors(row, col);
+        connectAllOpenNeighbors(row, col);
     }
 
     public boolean isOpen(int row, int col) {
