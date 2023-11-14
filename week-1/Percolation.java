@@ -1,8 +1,11 @@
+import edu.princeton.cs.algs4.WeightedQuickUnionUF;
+
 public class Percolation {
     private int sideLength;
     private int numberOfOpenSites;
     private boolean[][] openSites;
-    private WeightedQuickUnionWithPathCompressionUF UnionFind;
+    //use algs4 function for homework submission.
+    private WeightedQuickUnionUF UnionFind;
 
     public Percolation(int n) {
         //O(n^2)
@@ -13,7 +16,7 @@ public class Percolation {
         numberOfOpenSites = 0;
         openSites = new boolean[n][n];
 
-        UnionFind = new WeightedQuickUnionWithPathCompressionUF(n * n + 2);
+        UnionFind = new WeightedQuickUnionUF(n * n + 2);
         //connect all virtual sites with top and bottom row.
         for (int i = 1; i <= n; i++) {
             UnionFind.union(0, enumerate(1, i));
