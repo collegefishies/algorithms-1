@@ -4,11 +4,10 @@ public class Percolation {
     private int sideLength;
     private int numberOfOpenSites;
     private boolean[][] openSites;
-    //use algs4 function for homework submission.
-    private WeightedQuickUnionUF UnionFind;
+    private WeightedQuickUnionUF unionFind;
 
     public Percolation(int n) {
-        //O(n^2)
+        // O(n^2)
         if (n <= 0) {
             throw new IllegalArgumentException("n must be greater than or equal to 1");
         }
@@ -16,13 +15,13 @@ public class Percolation {
         numberOfOpenSites = 0;
         openSites = new boolean[n][n];
 
-        UnionFind = new WeightedQuickUnionUF(n * n + 2);
-        //connect all virtual sites with top and bottom row.
+        unionFind = new WeightedQuickUnionUF(n * n + 2);
+        // connect all virtual sites with top and bottom row.
         for (int i = 1; i <= n; i++) {
-            UnionFind.union(0, enumerate(1, i));
+            unionFind.union(0, enumerate(1, i));
         }
         for (int i = 1; i <= n; i++) {
-            UnionFind.union(n * n + 1, enumerate(n, i));
+            unionFind.union(n * n + 1, enumerate(n, i));
         }
     }
 
@@ -31,7 +30,7 @@ public class Percolation {
     }
 
     private int enumerate(int row, int col) {
-        //returns an enumeration from 1 to sideLength^2 for each site in the array
+        // returns an enumeration from 1 to sideLength^2 for each site in the array
         if (row < 1 || row > sideLength || col < 1 || col > sideLength) {
             throw new IllegalArgumentException("All indices must be from 1 to " + sideLength);
         }
@@ -47,7 +46,7 @@ public class Percolation {
         }
 
         if (isOpen(row1, col1) && isOpen(row2, col2)) {
-            UnionFind.union(enumerate(row1, col1), enumerate(row2, col2));
+            unionFind.union(enumerate(row1, col1), enumerate(row2, col2));
         }
     }
 
@@ -61,26 +60,27 @@ public class Percolation {
             try {
                 connectOpenNeighbor(row, col, newRow, newCol);
             } catch (IllegalArgumentException e) {
+                System.out.println("Illegal Argument Exception.");
             }
         }
     }
 
     public void open(int row, int col) {
-        //O(1)
+        // O(1)
 
-        //open sites
+        // open sites
         if (row < 1 || row > sideLength || col < 1 || col > sideLength) {
             throw new IllegalArgumentException("All indices must be from 1 to " + sideLength);
         }
         openSites[row - 1][col - 1] = true;
         numberOfOpenSites += 1;
 
-        //connect neighbors
+        // connect neighbors
         connectAllOpenNeighbors(row, col);
     }
 
     public boolean isOpen(int row, int col) {
-        //O(1)
+        // O(1)
         if (row < 1 || row > sideLength || col < 1 || col > sideLength) {
             throw new IllegalArgumentException("All indices must be from 1 to " + sideLength);
         }
@@ -88,17 +88,18 @@ public class Percolation {
     }
 
     public boolean isFull(int row, int col) {
-        //O(1)
-        return UnionFind.connected(0, enumerate(row, col));
+        // O(1)
+        boolean isConnectedToTop = unionFind.find(0) == unionFind.find(enumerate(row, col));
+        return isConnectedToTop && isOpen(row, col);
     }
 
     public int numberOfOpenSites() {
-        //O(1)
+        // O(1)
         return numberOfOpenSites;
     }
 
     public boolean percolates() {
-        //must be O(1)
-        return UnionFind.connected(0, sideLength * sideLength + 1);
+        // must be O(1)
+        return unionFind.find(0) == unionFind.find(sideLength * sideLength + 1);
     }
 }

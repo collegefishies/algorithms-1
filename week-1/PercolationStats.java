@@ -1,17 +1,15 @@
 import edu.princeton.cs.algs4.StdRandom;
+import edu.princeton.cs.algs4.StdStats;
 
 public class PercolationStats {
-    private int n;
-    private int trials;
-    private double openFractions[];
+    private static final double CONFIDENCE_95 = 1.96;
+    private double[] openFractions;
     private Percolation percolation;
 
     public PercolationStats(int n, int trials) {
         if (n <= 0 || trials <= 0) {
             throw new IllegalArgumentException("n and trials must both be positive.");
         }
-        this.n = n;
-        this.trials = trials;
         openFractions = new double[trials];
 
         for (int trial = 0; trial < trials; trial++) {
@@ -35,36 +33,25 @@ public class PercolationStats {
     }
 
     private void printStats() {
-        System.out.printf("mean                     = %f\n", mean());
-        System.out.printf("stddev                   = %f\n", stddev());
-        System.out.printf("95%% confidence interval = [%f, %f]\n", confidenceLo(), confidenceHi());
+        System.out.printf("mean                     = %f%n", mean());
+        System.out.printf("stddev                   = %f%n", stddev());
+        System.out.printf("95%% confidence interval = [%f, %f]%n", confidenceLo(), confidenceHi());
     }
 
     public double mean() {
-        double mean = 0;
-        for (int i = 0; i < openFractions.length; i++) {
-            mean += openFractions[i];
-        }
-        mean /= openFractions.length;
-        return mean;
+        return StdStats.mean(openFractions);
     }
 
     public double stddev() {
-        double avg = mean();
-        double variance = 0;
-        for (double x : openFractions) {
-            variance += Math.pow(x - avg, 2);
-        }
-        variance /= openFractions.length - 1;
-        return Math.sqrt(variance);
+        return StdStats.stddev(openFractions);
     }
 
     public double confidenceLo() {
-        return mean() - 1.96 * stddev() / Math.sqrt(openFractions.length);
+        return mean() - CONFIDENCE_95 * stddev() / Math.sqrt(openFractions.length);
     }
 
     public double confidenceHi() {
-        return mean() + 1.96 * stddev() / Math.sqrt(openFractions.length);
+        return mean() + CONFIDENCE_95 * stddev() / Math.sqrt(openFractions.length);
     }
 
     public static void main(String[] args) {
@@ -74,9 +61,7 @@ public class PercolationStats {
 
         int n = Integer.parseInt(args[0]);
         int trials = Integer.parseInt(args[1]);
-        PercolationStats percolationStats = new PercolationStats(n, trials);
-
-
+        new PercolationStats(n, trials);
     }
 }
 
