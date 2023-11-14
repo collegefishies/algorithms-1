@@ -26,6 +26,10 @@ public class Percolation {
         }
     }
 
+    public static void main(String[] args) {
+
+    }
+
     private int enumerate(int row, int col) {
         //returns an enumeration from 1 to sideLength^2 for each site in the array
         if (row < 1 || row > sideLength || col < 1 || col > sideLength) {
@@ -42,7 +46,7 @@ public class Percolation {
             throw new IllegalArgumentException("All indices must be from 1 to " + sideLength);
         }
 
-        if ( isOpen(row1, col1) && isOpen(row2, col2) ) {
+        if (isOpen(row1, col1) && isOpen(row2, col2)) {
             UnionFind.union(enumerate(row1, col1), enumerate(row2, col2));
         }
     }
@@ -85,7 +89,7 @@ public class Percolation {
 
     public boolean isFull(int row, int col) {
         //O(1)
-        return !isOpen(row, col);
+        return UnionFind.connected(0, enumerate(row, col));
     }
 
     public int numberOfOpenSites() {
@@ -96,9 +100,5 @@ public class Percolation {
     public boolean percolates() {
         //must be O(1)
         return UnionFind.connected(0, sideLength * sideLength + 1);
-    }
-
-    public static void main(String[] args) {
-
     }
 }
