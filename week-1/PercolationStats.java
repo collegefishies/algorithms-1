@@ -4,7 +4,6 @@ import edu.princeton.cs.algs4.StdStats;
 public class PercolationStats {
     private static final double CONFIDENCE_95 = 1.96;
     private double[] openFractions;
-    private Percolation percolation;
 
     public PercolationStats(int n, int trials) {
         if (n <= 0 || trials <= 0) {
@@ -13,7 +12,7 @@ public class PercolationStats {
         openFractions = new double[trials];
 
         for (int trial = 0; trial < trials; trial++) {
-            percolation = new Percolation(n);
+            Percolation percolation = new Percolation(n);
 
             while (!percolation.percolates()) {
                 // select random site
