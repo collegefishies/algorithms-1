@@ -28,8 +28,6 @@ public class PercolationStats {
                 openFractions[trial] = (1.0) * percolation.numberOfOpenSites() / Math.pow(n, 2);
             }
         }
-
-        printStats();
     }
 
     private void printStats() {
@@ -62,6 +60,8 @@ public class PercolationStats {
         int n = Integer.parseInt(args[0]);
         int trials = Integer.parseInt(args[1]);
         new PercolationStats(n, trials);
+
+        printStats();
     }
 }
 
