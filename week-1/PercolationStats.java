@@ -16,18 +16,13 @@ public class PercolationStats {
             percolation = new Percolation(n);
 
             while (!percolation.percolates()) {
-                //select random site
+                // select random site
                 int row = StdRandom.uniformInt(n) + 1;
                 int col = StdRandom.uniformInt(n) + 1;
-
-                if (percolation.isFull(row, col)) {
-                    percolation.open(row, col);
-                }
+                percolation.open(row, col);
             }
 
-            if (percolation.percolates()) {
-                openFractions[trial] = (1.0) * percolation.numberOfOpenSites() / Math.pow(n, 2);
-            }
+            openFractions[trial] = (1.0) * percolation.numberOfOpenSites() / Math.pow(n, 2);
         }
     }
 
