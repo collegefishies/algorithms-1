@@ -1,0 +1,8 @@
+10
+union 1 9
+union 9 6
+union 6 2
+find 1
+find 2
+find 6
+find 9

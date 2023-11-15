@@ -3,17 +3,24 @@ import java.util.Scanner;
 public class UnionFindWithSpecificElement {
     private int[] parentOf;
     private int[] treeDepthOf;
+    private int[] maxElementOf;
 
 
     public UnionFindWithSpecificElement(int N) {
         //O(N)
         parentOf = new int[N];
         treeDepthOf = new int[N];
+        maxElementOf = new int[N];
 
         for (int i = 0; i < N; i++) {
             parentOf[i] = i;
+            maxElementOf[i] = i;
             treeDepthOf[i] = 0;
         }
+    }
+
+    public int find(int q) {
+        return maxElementOf[rootOf(q)];
     }
 
     public void union(int p, int q) {
@@ -22,14 +29,20 @@ public class UnionFindWithSpecificElement {
         int root2 = rootOf(q);
         int depthOfTree1 = treeDepthOf[root1];
         int depthOfTree2 = treeDepthOf[root2];
+        int largestElement1 = maxElementOf[root1];
+        int largestElement2 = maxElementOf[root2];
+        int largestElement = Math.max(largestElement1, largestElement2);
 
         if (depthOfTree1 > depthOfTree2) {
             parentOf[root2] = root1;
+            maxElementOf[root1] = largestElement;
         } else if (depthOfTree2 > depthOfTree1) {
             parentOf[root1] = root2;
+            maxElementOf[root2] = largestElement;
         } else {
             parentOf[root1] = root2;
             treeDepthOf[root1] += 1;
+            maxElementOf[root2] = largestElement;
         }
 
     }
@@ -63,7 +76,7 @@ public class UnionFindWithSpecificElement {
         UnionFindWithSpecificElement qf = new UnionFindWithSpecificElement(N);
 
 
-        System.out.println("Enter union/find commands:");
+        System.out.println("Enter union/find/connected commands:");
         while (scanner.hasNext()) {
             String command = scanner.next();
             if (command.equals("union")) {
@@ -74,8 +87,11 @@ public class UnionFindWithSpecificElement {
                 int p = scanner.nextInt();
                 int q = scanner.nextInt();
                 System.out.println("connected(" + p + ", " + q + ")? " + qf.connected(p, q));
+            } else if (command.equals("find")) {
+                int p = scanner.nextInt();
+                System.out.println("find(" + p + ") = " + qf.find(p));
             } else {
-                System.out.println("Unknown command. Use 'union' or 'connected'.");
+                System.out.println("Unknown command. Use 'union', 'find', or 'connected'.");
             }
         }
 
