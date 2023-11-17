@@ -4,6 +4,41 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class BinarySearchTest {
+    @Test
+    @DisplayName("Search for Any Occurrence in Repeating Array")
+    void searchAnyInRepeatingArray() {
+        int[] array = {1, 2, 2, 2, 3};
+        int searchValue = 2;
+        int resultIndex = BinarySearch.any(array, searchValue);
+        assertEquals(searchValue, array[resultIndex], "The value at the found index should match the search value.");
+    }
+
+    @Test
+    @DisplayName("Search for Any Occurrence in Single Element Array")
+    void searchAnyInSingleElementArray() {
+        int[] array = {1};
+        int searchValue = 1;
+        int resultIndex = BinarySearch.any(array, searchValue);
+        assertEquals(searchValue, array[resultIndex], "The value at the found index should match the search value.");
+    }
+
+    @Test
+    @DisplayName("Search for Any Occurrence in Non-Repeating Array")
+    void searchAnyInNonRepeatingArray() {
+        int[] array = {1, 3, 5, 7, 9};
+        int searchValue = 7;
+        int resultIndex = BinarySearch.any(array, searchValue);
+        assertEquals(searchValue, array[resultIndex], "The value at the found index should match the search value.");
+    }
+
+    @Test
+    @DisplayName("Search for Non-Existent Element")
+    void searchAnyForNonExistentElement() {
+        int[] array = {1, 2, 3, 5, 6};
+        int searchValue = 4;
+        int resultIndex = BinarySearch.any(array, searchValue);
+        assertEquals(-1, resultIndex, "Should return -1 when the element is not found.");
+    }
 
     @Test
     @DisplayName("Search for Rightmost Occurrence in Repeating Array")
@@ -13,6 +48,25 @@ public class BinarySearchTest {
         int expectedIndex = 3; // rightmost occurrence of 2
         assertEquals(expectedIndex, BinarySearch.right(array, searchValue));
     }
+
+    @Test
+    @DisplayName("Search for Rightmost Occurrence in Repeating Array")
+    void searchRightmostInRepeatingArray2() {
+        int[] array = {1, 2, 2, 2, 3, 4, 4, 4, 4, 4, 4, 4, 4};
+        int searchValue = 2;
+        int expectedIndex = 3; // rightmost occurrence of 2
+        assertEquals(expectedIndex, BinarySearch.right(array, searchValue));
+    }
+
+    @Test
+    @DisplayName("Search for Rightmost Occurrence in Repeating Array")
+    void searchRightmostInRepeatingArray3() {
+        int[] array = {1, 2, 2, 2, 3, 4, 4, 4, 4, 4, 4, 4, 4};
+        int searchValue = 4;
+        int expectedIndex = array.length - 1; // rightmost occurrence of 2
+        assertEquals(expectedIndex, BinarySearch.right(array, searchValue));
+    }
+
 
     @Test
     @DisplayName("Search for Non-Existent Element")
@@ -67,6 +121,18 @@ public class BinarySearchTest {
         }
         int searchValue = 500;
         assertEquals(500, BinarySearch.left(array, searchValue)); // leftmost occurrence of 500
+    }
+
+    @Test
+    @DisplayName("Search in Large Repeating Array")
+    void searchInLargeArrayWithConstantValues() {
+        int[] array = new int[1000]; // Large array of size 1000
+        for (int i = 0; i < array.length; i++) {
+            array[i] = 500; // Fill with one number
+        }
+        int searchValue = 500;
+        assertEquals(0, BinarySearch.left(array, searchValue)); // leftmost occurrence of 500
+        assertEquals(array.length - 1, BinarySearch.right(array, searchValue)); // rightmost occurrence of 500
     }
 
 }
