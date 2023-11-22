@@ -1,21 +1,25 @@
 import java.util.Arrays;
 
 public class BinarySearch {
-    public static int any(int[] a, int val) {
-        // finds any index that matches val
+    private static void assert(
+    boolean assertion)
+
+    {
+        if (assertion == false)
+            throw new Exception("Assertion was false.");
+    }
+
+    public static int any(int[] a, int val) { // finds any index that matches val
         int low = 0;
         int high = a.length - 1;
-
         while (low <= high) {
-            int mid = low + (high - low + 1)/2;
-
-            if (a[mid] > val) {
+            int mid = low + (high - low) / 2;
+            if (a[mid] > val)
                 high = mid - 1;
-            } else if (a[mid] < val) {
+            else if (a[mid] < val)
                 low = mid + 1;
-            } else {
+            else
                 return mid;
-            }
         }
 
         return -1;
