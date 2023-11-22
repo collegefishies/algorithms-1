@@ -1,14 +1,8 @@
+import edu.princeton.cs.algs4.StdOut;
+
 import java.util.Arrays;
 
 public class BinarySearch {
-    private static void assert(
-    boolean assertion)
-
-    {
-        if (assertion == false)
-            throw new Exception("Assertion was false.");
-    }
-
     public static int any(int[] a, int val) { // finds any index that matches val
         int low = 0;
         int high = a.length - 1;
@@ -26,33 +20,45 @@ public class BinarySearch {
     }
 
     public static int left(int[] a, int val) {
-        if (a.length == 0) {
-            return -1;
+        //return the whole array
+        int left = 0;
+        int right = a.length - 1;
+
+        StdOut.println("Target Value: " + val);
+        while (left <= right) {
+            // assert if `val` is in the array, it must be within (left, right).
+            int mid = left + (right - left) / 2;
+            StdOut.printf("%-5s: %5d\n%-5s: %5d\n%-5s: %5d\n","left", left, "mid", mid, "right", right);
+            StdOut.println(Arrays.toString(Arrays.copyOfRange(a, left, right + 1)));
+            if (val < a[mid])
+                // assert within(left, right) and val < mid;
+                // => within(left, mid - 1);
+                right = mid - 1;
+                // => within(left, right);
+            else if (val == a[mid]) {
+                // within(left, mid);
+                if (mid == 0)
+                    return mid;
+
+                // within(left, mid);
+                assert mid > 0;
+                if (val != a[mid - 1]) {
+                    // within(mid, mid);
+                    assert a[mid] == val && a[mid - 1] != val;
+                    return mid;
+                } else {
+                    // within (left, mid - 1);
+                    assert val == a[mid - 1];
+                    right = mid - 1;
+                }
+            } else if (val > a[mid])
+                left = mid + 1;
         }
 
-        int low = 0;
-        int high = a.length - 1;
-        int mid = (high - low) / 2 + low;
-        int width = high - low + 1;
+        int mid = left + (right - left) / 2;
+        StdOut.printf("%-5s: %5d\n%-5s: %5d\n%-5s: %5d\n","left", left, "mid", mid, "right", right);
+        StdOut.println(Arrays.toString(Arrays.copyOfRange(a, left, right + 1)));
 
-        while (low < high) {
-            width = high - low + 1;
-            int[] subarray = Arrays.copyOfRange(a, low, high + 1);
-
-            mid = (high - low) / 2 + low;
-
-            if (a[mid] > val) {
-                high = mid - 1;
-            } else if (a[mid] < val) {
-                low = mid + 1;
-            } else {
-                return low;
-            }
-        }
-
-        if (a[low] == val) {
-            return low;
-        }
         return -1;
     }
 
