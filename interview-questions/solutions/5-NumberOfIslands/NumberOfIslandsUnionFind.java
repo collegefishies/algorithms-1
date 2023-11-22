@@ -1,4 +1,4 @@
-class WeightedQuickUnionUF {
+private class WeightedQuickUnionUF {
     private int[] parentOf;
     private int[] depthOf;
     private int islands;
@@ -52,7 +52,7 @@ class WeightedQuickUnionUF {
     public int sets() { return islands; }
 }
 
-class Solution {
+private class Solution {
     int m; int n;
 
     private int enumerate(int i, int j) { return i + j*m; }

@@ -1,23 +1,8 @@
 import java.util.NoSuchElementException;
 
-public interface StackInterface<Type> {
-    void push(Type val);
-
-    Type pop();
-
-    boolean isEmpty();
-
-    int size();
-}
-
 public class StackLinkedList<Type> implements StackInterface<Type> {
     private int count;
     private Node current = null;
-
-    private class Node {
-        Type value;
-        Node next;
-    }
 
     public StackLinkedList() {
         count = 0;
@@ -53,8 +38,11 @@ public class StackLinkedList<Type> implements StackInterface<Type> {
     public int size() {
         return count;
     }
+
+    private class Node {
+        Type value;
+        Node next;
+    }
 }
 
-public class StackArray<Type> implements StackInterface<Type> {
 
-}
