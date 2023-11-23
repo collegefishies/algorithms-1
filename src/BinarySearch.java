@@ -37,7 +37,7 @@ public class BinarySearch {
                 // => within(left, right);
             else if (val == a[mid]) {
                 // within(left, mid);
-                if (mid == 0)
+                if (mid == left)
                     return mid;
 
                 // within(left, mid);
@@ -75,7 +75,7 @@ public class BinarySearch {
                 left = mid + 1;
             else {
                 assert a[mid] == val;
-                if (mid == a.length - 1) {
+                if (mid == right) {
                     return mid;
                 }
 
