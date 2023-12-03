@@ -11,7 +11,36 @@ of a stack and a queue that supports adding and removing items from either the
 front or the back of the data structure. Create a generic data type Deque that
 implements the following API:
 
+public class Deque<Item> implements Iterable<Item> {
 
+    // construct an empty deque
+    public Deque()
+
+    // is the deque empty?
+    public boolean isEmpty()
+
+    // return the number of items on the deque
+    public int size()
+
+    // add the item to the front
+    public void addFirst(Item item)
+
+    // add the item to the back
+    public void addLast(Item item)
+
+    // remove and return the item from the front
+    public Item removeFirst()
+
+    // remove and return the item from the back
+    public Item removeLast()
+
+    // return an iterator over items in order from front to back
+    public Iterator<Item> iterator()
+
+    // unit testing (required)
+    public static void main(String[] args)
+
+}
 
 Corner cases.  Throw the specified exception for the following corner cases:
 
@@ -37,33 +66,58 @@ operation (including construction) in constant worst-case time. A deque
 containing n items must use at most 48n + 192 bytes of memory. Additionally,
 your iterator implementation must support each operation (including construction)
 in constant worst-case time.
-
 */
+
+import edu.princeton.cs.algs4.StdOut;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 public class Deque<Item> implements Iterable<Item> {
-    private DoublyLinkedList<Item> head;
-    private DoublyLinkedList<Item> tail;
+    private DoublyLinkedList head;
+    private DoublyLinkedList tail;
     private int length;
+    public Deque() {
+    }
 
-    public Deque() {}
+    public static void main(String[] args) {
+        Deque<Integer> q = new Deque<>();
+        q.addLast(0);
+        q.addLast(1);
+        q.addLast(2);
+        StdOut.println(q.size());
+        for (int x : q) StdOut.print(x + " ");
+        q.addFirst(0);
+        q.addFirst(1);
+        q.addFirst(2);
+        for (int x : q) StdOut.print(x + " ");
+        q.addFirst(0);
+        q.addFirst(1);
+        q.addFirst(2);
+        StdOut.print(q.removeLast() + " ");
+        StdOut.print(q.removeLast() + " ");
+        StdOut.print(q.removeLast() + " ");
+        StdOut.println(q.isEmpty());
+    }
 
     public boolean isEmpty() {
         return head == null || tail == null;
-    };
+    }
 
-    public int size() { return length; }
+    public int size() {
+        return length;
+    }
 
     public void addFirst(Item item) {
-        if (item == null) { throw new IllegalArgumentException("Item cannot be null"); }
+        if (item == null) {
+            throw new IllegalArgumentException("Item cannot be null");
+        }
         if (head == null) {
-            head = new DoublyLinkedList<Item>();
+            head = new DoublyLinkedList();
             head.value = item;
             tail = head;
         } else {
-            DoublyLinkedList<Item> newHead = new DoublyLinkedList<Item>();
+            DoublyLinkedList newHead = new DoublyLinkedList();
             newHead.value = item;
             newHead.back = head;
             head.next = newHead;
@@ -74,13 +128,15 @@ public class Deque<Item> implements Iterable<Item> {
     }
 
     public void addLast(Item item) {
-        if (item == null) { throw new IllegalArgumentException("Item cannot be null"); }
+        if (item == null) {
+            throw new IllegalArgumentException("Item cannot be null");
+        }
         if (tail == null) {
-            tail = new DoublyLinkedList<Item>();
+            tail = new DoublyLinkedList();
             tail.value = item;
             head = tail;
         } else {
-            DoublyLinkedList<Item> newTail = new DoublyLinkedList<Item>();
+            DoublyLinkedList newTail = new DoublyLinkedList();
             newTail.value = item;
             newTail.next = tail;
             tail.back = newTail;
@@ -94,7 +150,7 @@ public class Deque<Item> implements Iterable<Item> {
             throw new NoSuchElementException("There's no element to remove.");
         }
 
-        DoublyLinkedList<Item> initialHead = head;
+        DoublyLinkedList initialHead = head;
         Item item = head.value;
         head = head.back;
         initialHead.back = null;
@@ -112,7 +168,7 @@ public class Deque<Item> implements Iterable<Item> {
             throw new NoSuchElementException("There's no element to remove.");
         }
 
-        DoublyLinkedList<Item> initialTail = tail;
+        DoublyLinkedList initialTail = tail;
         Item item = tail.value;
         tail = tail.next;
         initialTail.next = null;
@@ -125,17 +181,27 @@ public class Deque<Item> implements Iterable<Item> {
         return item;
     }
 
-    public Iterator<Item> iterator();
+    public Iterator<Item> iterator() {
+        return new Iterator<Item>() {
+            public boolean hasNext() {
+                return !isEmpty();
+            }
+
+            public Item next() {
+                if (isEmpty()) throw new NoSuchElementException("Deque is empty.");
+                return removeFirst();
+            }
+        };
+    }
+
     public String toString() {
         return "Deque";
     }
-    public static void main(String[] args) {
 
+    private class DoublyLinkedList {
+        public Item value;
+        public DoublyLinkedList next; // right
+        public DoublyLinkedList back; // left, in my head.
     }
 }
 
-private class DoublyLinkedList<Item> {
-    Item value;
-    DoublyLinkedList<Item> next; // right
-    DoublyLinkedList<Item> back; // left, in my head.
-}
