@@ -12,7 +12,6 @@ import edu.princeton.cs.algs4.StdDraw;
 import edu.princeton.cs.algs4.StdOut;
 
 import java.util.Comparator;
-import java.util.Objects;
 
 public class Point implements Comparable<Point> {
 
@@ -88,9 +87,6 @@ public class Point implements Comparable<Point> {
         else return 1;
     }
 
-    public int hashCode() {
-        return Objects.hash(x, y);
-    }
 
     /**
      * Compares two points by the slope they make with this point.

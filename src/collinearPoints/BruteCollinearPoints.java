@@ -5,7 +5,7 @@ import edu.princeton.cs.algs4.StdOut;
 import java.util.Comparator;
 
 public class BruteCollinearPoints {
-    int i = 0;
+    private int i = 0;
     private LineSegment[] segments = new LineSegment[1];
 
     private void add(LineSegment s) {
@@ -47,6 +47,12 @@ public class BruteCollinearPoints {
     }
     public BruteCollinearPoints(Point[] points) {
         if (points == null) throw new IllegalArgumentException("No null arrays");
+        Point oldP = null;
+        for (Point p : points) {
+            if (p == null) throw new IllegalArgumentException("No null points in points array.");
+            if (p.equals(oldP)) throw new IllegalArgumentException("No duplicate points.");
+            oldP = p;
+        }
         int n = points.length;
         // sort by the coordinates
         for (int i = 0; i < n - 3; i++) {
