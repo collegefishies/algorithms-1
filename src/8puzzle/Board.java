@@ -1,6 +1,5 @@
+import edu.princeton.cs.algs4.Stack;
 import edu.princeton.cs.algs4.StdOut;
-
-import java.util.Iterator;
 
 public class Board {
     private final int n;
@@ -22,9 +21,8 @@ public class Board {
         for (int i = 0; i < a; i++) {
             for (int j = 0; j < a; j++) {
                 int x = tiles[i][j];
-                if (x < 0 || x > a * a - 1)
-                    throw new IllegalArgumentException(
-                            "Tiles must be consecutive from 0 to N^2 -1");
+                if (x < 0 || x > a * a - 1) throw new IllegalArgumentException(
+                        "Tiles must be consecutive from 0 to N^2 -1");
                 this.tiles[i][j] = x;
                 if (x == 0) {
                     zeroI = i;
@@ -34,21 +32,19 @@ public class Board {
         }
         this.n = a;
 
-        hammingDistance = hamming(tiles);
-        manhattanDistance = manhattan(tiles);
+
     }
 
 
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append(n);
-
+        sb.append("\n");
         for (int i = 0; i < n; i++) {
-            sb.append("\n");
-
             for (int j = 0; j < n; j++) {
-                sb.append(String.format("%3d", tiles[i][j]));
+                sb.append(String.format("%2d ", tiles[i][j]));
             }
+            sb.append("\n");
         }
 
         return sb.toString();
@@ -59,10 +55,12 @@ public class Board {
     }
 
     public int hamming() {
+        if (hammingDistance == -1) hammingDistance = hamming(tiles);
         return hammingDistance;
     }
 
     public int manhattan() {
+        if (manhattanDistance == -1) manhattanDistance = manhattan(tiles);
         return manhattanDistance;
     }
 
@@ -117,53 +115,31 @@ public class Board {
     }
 
     public Iterable<Board> neighbors() {
-        return new Neighbors();
+        Stack<Board> boards = new Stack<>();
+        int[][] directions = new int[][] { { 1, 0 }, { -1, 0 }, { 0, 1 }, { 0, -1 } };
+        for (int[] dir : directions) {
+            int x = zeroI + dir[0];
+            int y = zeroJ + dir[1];
+            if (isValid(x, y)) {
+                // make a copy of this board
+                Board neighbor = new Board(tiles);
+                // then swap the empty tile with the neighboring tile.
+                neighbor.swap(zeroI, zeroJ, x, y);
+                neighbor.zeroI = x;
+                neighbor.zeroJ = y;
+                neighbor.hammingDistance = neighbor.hamming(neighbor.tiles);
+                neighbor.manhattanDistance = neighbor.manhattan(neighbor.tiles);
+
+                boards.push(neighbor);
+            }
+        }
+        return boards;
     }
 
-    private class Neighbors implements Iterable<Board> {
-
-        public Iterator<Board> iterator() {
-            return new BoardIterator();
-        }
-
-        private class BoardIterator implements Iterator<Board> {
-            int index = 0;
-            int numberOfNeighbors = 0;
-            Board[] boards = new Board[4];
-
-            BoardIterator() {
-                int[][] directions = new int[][] { { 1, 0 }, { -1, 0 }, { 0, 1 }, { 0, -1 } };
-                for (int[] dir : directions) {
-                    int x = zeroI + dir[0];
-                    int y = zeroJ + dir[1];
-                    if (isValid(x, y)) {
-                        // make a copy of this board
-                        Board neighbor = new Board(tiles);
-                        boards[numberOfNeighbors++] = neighbor;
-                        // then swap the empty with the neighbor.
-                        neighbor.swap(zeroI, zeroJ, x, y);
-                        neighbor.zeroI = x;
-                        neighbor.zeroJ = y;
-                        neighbor.hammingDistance = neighbor.hamming(neighbor.tiles);
-                        neighbor.manhattanDistance = neighbor.manhattan(neighbor.tiles);
-                    }
-                }
-            }
-
-            private boolean isValid(int i, int j) {
-                if (i < 0 || i >= n) return false;
-                if (j < 0 || j >= n) return false;
-                return true;
-            }
-
-            public boolean hasNext() {
-                return index < numberOfNeighbors;
-            }
-
-            public Board next() {
-                return boards[index++];
-            }
-        }
+    private boolean isValid(int i, int j) {
+        if (i < 0 || i >= n) return false;
+        if (j < 0 || j >= n) return false;
+        return true;
     }
 
     public Board twin() {
@@ -221,5 +197,6 @@ public class Board {
     public static void main(String[] args) {
         testBoard(2);
         testBoard(3);
+        testBoard(127);
     }
 }

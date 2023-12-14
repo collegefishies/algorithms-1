@@ -14,14 +14,14 @@ import java.util.Deque;
 public class Solver {
     private boolean solvable = false;
     private int moves = -1;
-    private MinPQ<SearchNode> pq = new MinPQ<>();
-    private MinPQ<SearchNode> pqTwin = new MinPQ<>();
     private Deque<Board> solution = new ArrayDeque<>();
 
     public Solver(Board initial) {
         if (initial == null) throw new IllegalArgumentException("Argument must be non-null.");
 
         // initialize A* and twin A*
+        MinPQ<SearchNode> pq = new MinPQ<>();
+        MinPQ<SearchNode> pqTwin = new MinPQ<>();
         pq.insert(new SearchNode(null, initial, 0));
         pqTwin.insert(new SearchNode(null, initial.twin(), 0));
 
@@ -127,13 +127,13 @@ public class Solver {
             else return 0;
         }
 
-        private int hammingPriority(SearchNode x) {
-            int a = curr.hamming() + movesMade;
-            int b = x.curr.hamming() + x.movesMade;
-            if (a > b) return 1;
-            else if (a < b) return -1;
-            else return 0;
-        }
+        // private int hammingPriority(SearchNode x) {
+        //     int a = curr.hamming() + movesMade;
+        //     int b = x.curr.hamming() + x.movesMade;
+        //     if (a > b) return 1;
+        //     else if (a < b) return -1;
+        //     else return 0;
+        // }
 
         public int compareTo(SearchNode x) {
             return manhattanPriority(x);
