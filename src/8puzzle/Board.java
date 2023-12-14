@@ -100,6 +100,9 @@ public class Board {
         if (this == y) return true;
         if (y.getClass() != this.getClass()) return false;
         Board x = (Board) y;
+        if (n != x.n) return false;
+        if (zeroI != x.zeroI) return false;
+        if (zeroJ != x.zeroJ) return false;
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < n; j++) {
                 if (tiles[i][j] != x.tiles[i][j]) return false;

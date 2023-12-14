@@ -26,7 +26,7 @@ public class Solver {
         pqTwin.insert(new SearchNode(null, initial.twin(), 0));
 
         // run A* and twin A*
-        while (true) {
+        while (!pq.isEmpty() || !pqTwin.isEmpty()) {
             if (!pq.isEmpty()) {
                 SearchNode x = pq.min();
                 pq.delMin();
@@ -64,12 +64,7 @@ public class Solver {
                     pqTwin.insert(new SearchNode(t, neighbor, t.moves() + 1));
                 }
             }
-            if (pq.isEmpty() && pqTwin.isEmpty()) {
-                return;
-            }
         }
-
-
     }
 
     public boolean isSolvable() {
