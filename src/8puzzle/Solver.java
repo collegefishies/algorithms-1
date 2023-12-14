@@ -20,48 +20,51 @@ public class Solver {
         if (initial == null) throw new IllegalArgumentException("Argument must be non-null.");
 
         // initialize A* and twin A*
-        MinPQ<SearchNode> pq = new MinPQ<>();
-        MinPQ<SearchNode> pqTwin = new MinPQ<>();
-        pq.insert(new SearchNode(null, initial, 0));
-        pqTwin.insert(new SearchNode(null, initial.twin(), 0));
+        MinPQ<SearchNode> searchQueue = new MinPQ<>();
+        MinPQ<SearchNode> twinSearchQueue = new MinPQ<>();
+        searchQueue.insert(new SearchNode(null, initial, 0));
+        twinSearchQueue.insert(new SearchNode(null, initial.twin(), 0));
 
         // run A* and twin A*
-        while (!pq.isEmpty() || !pqTwin.isEmpty()) {
-            if (!pq.isEmpty()) {
-                SearchNode x = pq.min();
-                pq.delMin();
+        while (!searchQueue.isEmpty() || !twinSearchQueue.isEmpty()) {
+            if (!searchQueue.isEmpty()) {
+                SearchNode currentNode = searchQueue.min();
+                searchQueue.delMin();
 
-                if (x.board().isGoal()) {
+                if (currentNode.board().isGoal()) {
                     solvable = true;
-                    moves = x.moves();
+                    moves = currentNode.moves();
                     // remember solution
-                    while (x != null) {
-                        solution.push(x.board());
-                        x = x.prev;
+                    while (currentNode != null) {
+                        solution.push(currentNode.board());
+                        currentNode = currentNode.prev;
                     }
                     return;
                 }
 
                 // add all neighbors.
-                for (Board neighbor : x.neighbors()) {
-                    if (x.prev != null && x.prev.prev != null && neighbor.equals(
-                            x.prev.prev.board())) continue;
-                    pq.insert(new SearchNode(x, neighbor, x.moves() + 1));
+                for (Board neighbor : currentNode.neighbors()) {
+                    if (currentNode.prev != null && currentNode.prev.prev != null
+                            && neighbor.equals(
+                            currentNode.prev.prev.board())) continue;
+                    searchQueue.insert(
+                            new SearchNode(currentNode, neighbor, currentNode.moves() + 1));
                 }
 
             }
-            if (!pqTwin.isEmpty()) {
-                SearchNode t = pqTwin.min();
-                pqTwin.delMin();
+            if (!twinSearchQueue.isEmpty()) {
+                SearchNode twinNode = twinSearchQueue.min();
+                twinSearchQueue.delMin();
 
-                if (t.board().isGoal()) {
+                if (twinNode.board().isGoal()) {
                     // the initial is unsolvable.
                     return;
                 }
-                for (Board neighbor : t.neighbors()) {
-                    if (t.prev != null && t.prev.prev != null && neighbor.equals(
-                            t.prev.prev.board())) continue;
-                    pqTwin.insert(new SearchNode(t, neighbor, t.moves() + 1));
+                for (Board neighbor : twinNode.neighbors()) {
+                    if (twinNode.prev != null && twinNode.prev.prev != null && neighbor.equals(
+                            twinNode.prev.prev.board())) continue;
+                    twinSearchQueue.insert(
+                            new SearchNode(twinNode, neighbor, twinNode.moves() + 1));
                 }
             }
         }
