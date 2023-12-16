@@ -148,7 +148,7 @@ public class Solver {
             int b = x.manhattanPriority;
             if (a > b) return 1;
             else if (a < b) return -1;
-            else return hammingPriority(x);
+            else return 0;
         }
 
         public Iterable<Board> neighbors() {
