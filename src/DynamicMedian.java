@@ -8,8 +8,10 @@ class DynamicMedian<T extends Comparable<T>> {
     // API
     public void insert(T x) {
         // insert first element.
-        if (small.size() == 0 && big.size() == 0)
+        if (small.size() == 0 && big.size() == 0) {
             small.insert(x);
+            return;
+        }
 
         // insert according to boundaries if they exist
         if (big.size() != 0 && x.compareTo(big.min()) < 0)
