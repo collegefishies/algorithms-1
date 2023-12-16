@@ -1,3 +1,6 @@
+import edu.princeton.cs.algs4.MaxPQ;
+import edu.princeton.cs.algs4.MinPQ;
+
 class DynamicMedian<T extends Comparable<T>> {
     private MinPQ<T> big = new MinPQ<>();
     private MaxPQ<T> small = new MaxPQ<>();
