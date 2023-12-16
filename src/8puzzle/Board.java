@@ -31,23 +31,12 @@ public class Board {
             }
         }
         this.n = a;
-
-
     }
-
-
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append(n);
-        sb.append("\n");
-        for (int i = 0; i < n; i++) {
-            for (int j = 0; j < n; j++) {
-                sb.append(String.format("%2d ", tiles[i][j]));
-            }
-            sb.append("\n");
-        }
-
-        return sb.toString();
+    
+    public static void main(String[] args) {
+        testBoard(2);
+        testBoard(3);
+        testBoard(127);
     }
 
     public int dimension() {
@@ -62,33 +51,6 @@ public class Board {
     public int manhattan() {
         if (manhattanDistance == -1) manhattanDistance = manhattan(tiles);
         return manhattanDistance;
-    }
-
-    private int hamming(int[][] initialTiles) {
-        int wrongPositions = 0;
-        for (int i = 0; i < n; i++) {
-            for (int j = 0; j < n; j++) {
-                if (initialTiles[i][j] == 0) continue;
-                if (initialTiles[i][j] != (j + 1) + i * n) wrongPositions++;
-            }
-        }
-        return wrongPositions;
-    }
-
-    private int manhattan(int[][] initialTiles) {
-        int distance = 0;
-        for (int i = 0; i < n; i++) {
-            for (int j = 0; j < n; j++) {
-                distance += manhattan(i, j, initialTiles[i][j]);
-            }
-        }
-        return distance;
-    }
-
-    private int manhattan(int i, int j, int val) {
-        if (val == 0) return 0;
-        int desiredI = (val - 1) / n, desiredJ = (val - 1) % n;
-        return Math.abs(i - desiredI) + Math.abs(j - desiredJ);
     }
 
     public boolean isGoal() {
@@ -111,12 +73,6 @@ public class Board {
         return true;
     }
 
-    private void swap(int i, int j, int x, int y) {
-        int temp = tiles[i][j];
-        tiles[i][j] = tiles[x][y];
-        tiles[x][y] = temp;
-    }
-
     public Iterable<Board> neighbors() {
         Stack<Board> boards = new Stack<>();
         int[][] directions = new int[][] { { 1, 0 }, { -1, 0 }, { 0, 1 }, { 0, -1 } };
@@ -127,22 +83,17 @@ public class Board {
                 // make a copy of this board
                 Board neighbor = new Board(tiles);
                 // then swap the empty tile with the neighboring tile.
+                int oldManhattan = manhattan(x, y, tiles[x][y]);
                 neighbor.swap(zeroI, zeroJ, x, y);
                 neighbor.zeroI = x;
                 neighbor.zeroJ = y;
-                neighbor.hammingDistance = neighbor.hamming(neighbor.tiles);
-                neighbor.manhattanDistance = neighbor.manhattan(neighbor.tiles);
-
+                int newManhattan = manhattan(zeroI, zeroJ, tiles[x][y]);
+                int deltaManhattan = newManhattan - oldManhattan;
+                neighbor.manhattanDistance = this.manhattanDistance + deltaManhattan;
                 boards.push(neighbor);
             }
         }
         return boards;
-    }
-
-    private boolean isValid(int i, int j) {
-        if (i < 0 || i >= n) return false;
-        if (j < 0 || j >= n) return false;
-        return true;
     }
 
     public Board twin() {
@@ -171,6 +122,60 @@ public class Board {
         return twin;
     }
 
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(n);
+        sb.append("\n");
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                sb.append(String.format("%2d ", tiles[i][j]));
+            }
+            sb.append("\n");
+        }
+
+        return sb.toString();
+    }
+
+    /*Private methods*/
+    private int hamming(int[][] initialTiles) {
+        int wrongPositions = 0;
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                if (initialTiles[i][j] == 0) continue;
+                if (initialTiles[i][j] != (j + 1) + i * n) wrongPositions++;
+            }
+        }
+        return wrongPositions;
+    }
+
+    private int manhattan(int[][] initialTiles) {
+        int distance = 0;
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                distance += manhattan(i, j, initialTiles[i][j]);
+            }
+        }
+        return distance;
+    }
+
+    private int manhattan(int i, int j, int val) {
+        if (val == 0) return 0;
+        int desiredI = (val - 1) / n, desiredJ = (val - 1) % n;
+        return Math.abs(i - desiredI) + Math.abs(j - desiredJ);
+    }
+
+    private void swap(int i, int j, int x, int y) {
+        int temp = tiles[i][j];
+        tiles[i][j] = tiles[x][y];
+        tiles[x][y] = temp;
+    }
+
+    private boolean isValid(int i, int j) {
+        if (i < 0 || i >= n) return false;
+        if (j < 0 || j >= n) return false;
+        return true;
+    }
+
     private static void testBoard(int n) {
         StdOut.printf("Creating a board of size: %d\n", n);
         Board test, other;
@@ -195,11 +200,5 @@ public class Board {
         for (Board neighbor : test.neighbors())
             StdOut.println(neighbor);
         StdOut.printf("One twin is \n%s\n", test.twin());
-    }
-
-    public static void main(String[] args) {
-        testBoard(2);
-        testBoard(3);
-        testBoard(127);
     }
 }

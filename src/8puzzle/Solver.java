@@ -6,15 +6,13 @@
 
 import edu.princeton.cs.algs4.In;
 import edu.princeton.cs.algs4.MinPQ;
+import edu.princeton.cs.algs4.Stack;
 import edu.princeton.cs.algs4.StdOut;
-
-import java.util.ArrayDeque;
-import java.util.Deque;
 
 public class Solver {
     private boolean solvable = false;
     private int moves = -1;
-    private Deque<Board> solution = new ArrayDeque<>();
+    private Stack<Board> solution = new Stack<>();
 
     public Solver(Board initial) {
         if (initial == null) throw new IllegalArgumentException("Argument must be non-null.");
@@ -44,9 +42,8 @@ public class Solver {
 
                 // add all neighbors.
                 for (Board neighbor : currentNode.neighbors()) {
-                    if (currentNode.prev != null && currentNode.prev.prev != null
-                            && neighbor.equals(
-                            currentNode.prev.prev.board())) continue;
+                    if (currentNode.prev != null
+                            && neighbor.equals(currentNode.prev.board())) continue;
                     searchQueue.insert(
                             new SearchNode(currentNode, neighbor, currentNode.moves() + 1));
                 }
@@ -61,26 +58,13 @@ public class Solver {
                     return;
                 }
                 for (Board neighbor : twinNode.neighbors()) {
-                    if (twinNode.prev != null && twinNode.prev.prev != null && neighbor.equals(
-                            twinNode.prev.prev.board())) continue;
+                    if (twinNode.prev != null && neighbor.equals(
+                            twinNode.prev.board())) continue;
                     twinSearchQueue.insert(
                             new SearchNode(twinNode, neighbor, twinNode.moves() + 1));
                 }
             }
         }
-    }
-
-    public boolean isSolvable() {
-        return solvable;
-    }
-
-    public int moves() {
-        return moves;
-    }
-
-    public Iterable<Board> solution() {
-        if (solution.size() == 0) return null;
-        else return new ArrayDeque<>(solution);
     }
 
     public static void main(String[] args) {
@@ -106,35 +90,65 @@ public class Solver {
         }
     }
 
+    public boolean isSolvable() {
+        return solvable;
+    }
+
+    public int moves() {
+        return moves;
+    }
+
+    public Iterable<Board> solution() {
+        if (solution.size() == 0) return null;
+        else return solution;
+    }
+
     private class SearchNode implements Comparable<SearchNode> {
         public SearchNode prev;
         private Board curr;
         private int movesMade;
+        private int manhattanPriority = -1;
+        private int hammingPriority = -1;
 
         SearchNode(SearchNode prev, Board curr, int movesMade) {
             this.prev = prev;
             this.curr = curr;
             this.movesMade = movesMade;
+
         }
 
-        private int manhattanPriority(SearchNode x) {
-            int a = curr.manhattan() + movesMade;
-            int b = x.curr.manhattan() + x.movesMade;
+        public int compareTo(SearchNode x) {
+            return manhattanPriority(x);
+        }
+
+        public void initManhattan() {
+            if (manhattanPriority == -1)
+                manhattanPriority = curr.manhattan() + movesMade;
+        }
+
+        public void initHamming() {
+            if (hammingPriority == -1)
+                hammingPriority = curr.hamming() + movesMade;
+        }
+
+        private int hammingPriority(SearchNode x) {
+            initHamming();
+            x.initHamming();
+            int a = this.hammingPriority;
+            int b = x.hammingPriority;
             if (a > b) return 1;
             else if (a < b) return -1;
             else return 0;
         }
 
-        // private int hammingPriority(SearchNode x) {
-        //     int a = curr.hamming() + movesMade;
-        //     int b = x.curr.hamming() + x.movesMade;
-        //     if (a > b) return 1;
-        //     else if (a < b) return -1;
-        //     else return 0;
-        // }
-
-        public int compareTo(SearchNode x) {
-            return manhattanPriority(x);
+        private int manhattanPriority(SearchNode x) {
+            initManhattan();
+            x.initManhattan();
+            int a = this.manhattanPriority;
+            int b = x.manhattanPriority;
+            if (a > b) return 1;
+            else if (a < b) return -1;
+            else return hammingPriority(x);
         }
 
         public Iterable<Board> neighbors() {
@@ -145,13 +159,13 @@ public class Solver {
             return movesMade;
         }
 
-        public Board board() {
-            return curr;
-        }
-
         public Board prevBoard() {
             if (prev == null) return null;
             return prev.board();
+        }
+
+        public Board board() {
+            return curr;
         }
     }
 }

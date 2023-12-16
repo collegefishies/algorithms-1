@@ -27,6 +27,7 @@
 
 import edu.princeton.cs.algs4.In;
 import edu.princeton.cs.algs4.StdOut;
+import edu.princeton.cs.algs4.Stopwatch;
 
 public class PuzzleChecker {
 
@@ -47,8 +48,10 @@ public class PuzzleChecker {
 
             // solve the slider puzzle
             Board initial = new Board(tiles);
+            Stopwatch c = new Stopwatch();
             Solver solver = new Solver(initial);
-            StdOut.println(filename + ": " + solver.moves());
+
+            StdOut.println(filename + ": " + solver.moves() + " (Time: " + c.elapsedTime() + ")");
         }
     }
 }
