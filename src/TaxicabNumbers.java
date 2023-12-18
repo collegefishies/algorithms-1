@@ -1,4 +1,5 @@
 import edu.princeton.cs.algs4.StdOut;
+import edu.princeton.cs.algs4.Stopwatch;
 
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -61,14 +62,11 @@ public class TaxicabNumbers {
 
     // test
     public static void main(String[] args) {
-        int N = 200;
+        Stopwatch c = new Stopwatch();
+        int N = 1100;
         int[] numbers = taxicabNumbers(N);
-        int[] cubes = new int[N+1];
-        for (int i = 0; i <= N; i++)
-            cubes[i] = i*i*i;
-
-//        StdOut.println(find(cubes, cube(13)));
         StdOut.println("Taxicab numbers whose components are less than " + N);
         StdOut.println(Arrays.toString(numbers));
+        StdOut.println("Elapsed time: " + c.elapsedTime() + " s");
     }
 }
