@@ -6,6 +6,7 @@
 
 import edu.princeton.cs.algs4.Point2D;
 import edu.princeton.cs.algs4.RectHV;
+import edu.princeton.cs.algs4.Stack;
 import edu.princeton.cs.algs4.StdDraw;
 import edu.princeton.cs.algs4.StdRandom;
 
@@ -16,6 +17,10 @@ public class KdTree {
     private int DIMENSIONS = 2;
     private int size;
     private Node root;
+
+    // nearest (method) variables
+    private double minimumDistance;
+    private Point2D nearestPoint;
 
     public KdTree() {
     }
@@ -55,47 +60,22 @@ public class KdTree {
 
     private RectHV updateBounds(RectHV oldBounds, Node root, Point2D p) {
         int level = root.level;
-        RectHV newBounds;
+        RectHV newBounds = new RectHV(0, 0, 1, 1);
+        ;
         int cmp = root.compareTo(p);
         // level 0 , compare x.
         if (level == 0 && cmp > 0) {
-            newBounds = new RectHV(
-                    oldBounds.xmin(),
-                    oldBounds.ymin(),
-                    root.x[0],
-                    oldBounds.ymax()
-            );
+            newBounds = new RectHV(oldBounds.xmin(), oldBounds.ymin(), root.x[0], oldBounds.ymax());
         }
         else if (level == 0 && cmp <= 0) {
-            newBounds = new RectHV(
-                    root.x[0],
-                    oldBounds.ymin(),
-                    oldBounds.xmax(),
-                    oldBounds.ymax()
-            );
+            newBounds = new RectHV(root.x[0], oldBounds.ymin(), oldBounds.xmax(), oldBounds.ymax());
         }
         else if (level == 1 && cmp > 0) {
-            newBounds = new RectHV(
-                    oldBounds.xmin(),
-                    oldBounds.ymin(),
-                    oldBounds.xmax(),
-                    root.x[1]
-            );
+            newBounds = new RectHV(oldBounds.xmin(), oldBounds.ymin(), oldBounds.xmax(), root.x[1]);
         }
         else if (level == 1 && cmp <= 0) {
-            newBounds = new RectHV(
-                    oldBounds.xmin(),
-                    root.x[1],
-                    oldBounds.xmax(),
-                    oldBounds.ymax()
-            );
+            newBounds = new RectHV(oldBounds.xmin(), root.x[1], oldBounds.xmax(), oldBounds.ymax());
         }
-        else {
-            newBounds = new RectHV(0, 0, 1, 1);
-            throw new RuntimeException("Logic Error. Should not have occured.");
-        }
-
-        // return oldBounds;
 
         return newBounds;
     }
@@ -105,7 +85,7 @@ public class KdTree {
         return contains(root, p);
     }
 
-    public boolean contains(Node root, Point2D p) {
+    private boolean contains(Node root, Point2D p) {
         if (root == null) return false;
 
         int cmp = root.compareTo(p);
@@ -143,12 +123,44 @@ public class KdTree {
 
     public Iterable<Point2D> range(RectHV rect) {
         if (rect == null) throw new IllegalArgumentException("No null");
-        return null;
+        Stack<Point2D> s = new Stack<>();
+
+        range(root, rect, s);
+        return s;
+    }
+
+    private void range(Node root, RectHV rect, Stack<Point2D> s) {
+        if (root == null) return;
+        if (!root.bounds.intersects(rect)) return;
+
+        if (rect.contains(root.val())) s.push(root.val());
+
+        range(root.left, rect, s);
+        range(root.right, rect, s);
     }
 
     public Point2D nearest(Point2D p) {
+        if (root == null) return null;
         if (p == null) throw new IllegalArgumentException("No null");
-        return null;
+        nearestPoint = root.val();
+        minimumDistance = nearestPoint.distanceTo(p);
+        nearest(root.left, p);
+        nearest(root.right, p);
+        return nearestPoint;
+    }
+
+    private void nearest(Node root, Point2D p) {
+        if (root == null) return;
+        if (root.bounds.distanceTo(p) > minimumDistance) return;
+
+        double dist = root.val().distanceTo(p);
+        if (dist < minimumDistance) {
+            minimumDistance = dist;
+            nearestPoint = root.val();
+        }
+
+        nearest(root.left, p);
+        nearest(root.right, p);
     }
 
     private class Node {
@@ -193,14 +205,10 @@ public class KdTree {
     }
 
     public static void main(String[] args) {
-        StdRandom.setSeed(42);
         KdTree tree = new KdTree();
         tree.insert(new Point2D(0.5, 0.5));
         for (int i = 0; i < 10; i++) {
-            tree.insert(new Point2D(
-                    StdRandom.uniformDouble(),
-                    StdRandom.uniformDouble()
-            ));
+            tree.insert(new Point2D(StdRandom.uniformDouble(), StdRandom.uniformDouble()));
         }
 
         tree.draw();

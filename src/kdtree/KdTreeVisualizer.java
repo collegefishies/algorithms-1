@@ -12,6 +12,7 @@ import edu.princeton.cs.algs4.Point2D;
 import edu.princeton.cs.algs4.RectHV;
 import edu.princeton.cs.algs4.StdDraw;
 import edu.princeton.cs.algs4.StdOut;
+import edu.princeton.cs.algs4.StdRandom;
 
 public class KdTreeVisualizer {
 
@@ -21,8 +22,10 @@ public class KdTreeVisualizer {
         KdTree kdtree = new KdTree();
         while (true) {
             if (StdDraw.isMousePressed()) {
-                double x = StdDraw.mouseX();
-                double y = StdDraw.mouseY();
+                // double x = StdDraw.mouseX();
+                // double y = StdDraw.mouseY();
+                double x = StdRandom.uniformDouble();
+                double y = StdRandom.uniformDouble();
                 StdOut.printf("%8.6f %8.6f\n", x, y);
                 Point2D p = new Point2D(x, y);
                 if (rect.contains(p)) {
